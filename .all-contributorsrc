@@ -24,7 +24,6 @@
         "doc"
       ]
     },
-    
     {
       "login": "ymloh",
       "name": "ymloh",
@@ -42,6 +41,15 @@
       "contributions": [
         "code",
         "doc"
+      ]
+    },
+    {
+      "login": "Amutha37",
+      "name": "Amutha ",
+      "avatar_url": "https://avatars.githubusercontent.com/u/67087939?v=4",
+      "profile": "https://github.com/Amutha37",
+      "contributions": [
+        "code"
       ]
     }
   ],
