@@ -13,19 +13,16 @@ except:
     import pandas as pd
 import copy
 from plotly.subplots import make_subplots
-#st.plotly_chart(2000,2000)
 import plotly.figure_factory as ff
+import copy
 
 
 try:
     assert st.expander != None
 except:
     st.expander = st.beta_expander
-#@st.cache
 def make_ridge_lines(df, transport_types):
-    # Since we do not want to plot 50+ lines, we only select some years to plot
-    #year_list = transport_types#[1950, 1960, 1970, 1980, 1990, 2000, 2010]
-    temp = df#temp[temp['year'].isin(year_list)]
+    temp = df
 
     # as we expect to plot histograms-like plots for each year, we group by year and mean temperature and aggregate with 'count' function
     temp = temp.groupby(['Main Transport Mode', 'One-Way Daily Commute Distance (km)']).agg({'One-Way Daily Commute Distance (km)': 'count'}).rename(columns={'One-Way Daily Commute Distance (km)': 'count'}).reset_index()
@@ -139,11 +136,6 @@ def make_multi_histogram(df, transport_types):
     st.markdown(
         "This information is useful to understand how far staff have to travel to work, and perhaps guide decisions to prompt less carbon-intensive travel in the future"
     )
-    # fig = go.Figure(data=[go.Histogram(x=df["One-Way Daily Commute Distance (km)"]],nbins=20))
-
-    # st.write(fig)
-    # import plotly.express as px
-    # df = px.data.tips()
     fig = px.histogram(df, x="One-Way Daily Commute Distance (km)", nbins=30)
     st.write(fig)
 
@@ -186,15 +178,6 @@ def total_distance_travelled(df, transport_types):
         total_km_list_half.append(i * j)
     total_km = np.round(np.sum(total_km_list), 0)
     total_kmh = np.round(np.sum(total_km_list_half), 0)
-
-    # total_km = 2 * np.round(sum(df["One-Way Daily Commute Distance (km)"])* sum(df["Num trips to office"]),0)
-    # odtt = OrderedDict(tt)
-    # names = []
-    # for k in odtt.keys():
-    #    names.append(str(k)+str(" (km)"))
-
-    # fig = px.pie(values=list(odtt.values()), names=names)
-    # total_km = np.round(np.sum(list(tt.values())), 0)
     st.sidebar.markdown("#### Total commute Distance")
     st.sidebar.markdown(
         "of all survey respondants (both ways) {0} (km)".format(total_km)
@@ -222,36 +205,25 @@ def encode_list(input, encode):
 def make_sankey_chart(df, transport_types):
     encode = {}
     transport_types = list(transport_types)
-    # st.text(transport_types)
-    # del transport_types[0]
     for i, name in enumerate(transport_types):
-        # if i!=0:
         encode[name] = 4 + i
 
     less_five_src = df[df["One-Way Daily Commute Distance (km)"] < 5.0].index
-    # st.text(less_five_src)
     less_five_src = [1.0 for i in range(0, len(less_five_src))]
-    # st.text(len(less_five_src))
     less_five_tgt = df[df["One-Way Daily Commute Distance (km)"] < 5.0][
         "Main Transport Mode"
     ]
     less_five_tgt = encode_list(less_five_tgt, encode)
     df_filtered = df[df["One-Way Daily Commute Distance (km)"] >= 5.0]
     df_filtered = df_filtered[df_filtered["One-Way Daily Commute Distance (km)"] < 10.0]
-    # st.text(len(df_filtered))
-
     less_ten_src = (
         df_filtered.index
-    )  # <10].index #and df["One-Way Daily Commute Distance (km)"]<10].index
+    )
     less_ten_src = [2.0 for i in range(0, len(less_ten_src))]
-    # st.text(len(less_ten_src))
-
     less_ten_tgt = df_filtered["Main Transport Mode"]
     less_ten_tgt = encode_list(less_ten_tgt, encode)
-
     greater_ten_src = df[df["One-Way Daily Commute Distance (km)"] >= 10.0].index
     greater_ten_src = [3.0 for i in range(0, len(greater_ten_src))]
-
     greater_ten_tgt = df[df["One-Way Daily Commute Distance (km)"] >= 10.0][
         "Main Transport Mode"
     ]
@@ -283,7 +255,6 @@ def make_sankey_chart(df, transport_types):
         "#17becf",  # blue-teal
     ]
     encode_list(transport_types, encode)
-
     fig = go.Figure(
         data=[
             go.Sankey(
@@ -322,9 +293,7 @@ def get_locations(df2):
     locs.extend(df2["Sunday Work Location"])
     st.text(set(locs))
 
-import copy
 
-#@st.cache
 def prep_matrix(df2):
 
     df2 = copy.copy(df2)
@@ -911,12 +880,6 @@ def __main__():
     if genre == "Pair Plots":
         fig = make_cluster_gram(df)
         st.pyplot(fig, use_container_width=True)
-    # st.title("Distribution plots")
-    # if 1 == 0:
-    # for transport in transport_types:
-    # dcc.Graph(figure=clustergram)
-
-    # make_scatter_matrix(df)
 
 
 __main__()
