@@ -769,6 +769,7 @@ def make_sankey_chart2(df, transport_types):
 
 def __main__():
     st.title("Your Councils Work Commute")
+    st.markdown("Newer version of this prototype app [here](https://share.streamlit.io/russelljjarvis/council-emissions-calculator/main/scripts/app.py)")
     st.markdown(
         "With your help, were building an understanding of how our commute effects our future environment. \n"
     )
